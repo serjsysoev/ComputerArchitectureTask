@@ -6,6 +6,14 @@ class DecimalConverter(val binaryStringLength: Int) {
     fun toUnsigned(value: Int) = toUnsigned(value, binaryStringLength)
 
     @Throws(IllegalArgumentException::class)
+    fun fromUnsigned(value: String): Int {
+        val result = value.toIntOrNull(2) ?: throw IllegalArgumentException()
+        require(result >= 0)
+
+        return result
+    }
+
+    @Throws(IllegalArgumentException::class)
     fun toSignedWithSignBit(value: Int): String {
         val signBit = if (value < 0) "1" else "0"
         val result = signBit + toUnsigned(abs(value), binaryStringLength - 1)
@@ -15,17 +23,38 @@ class DecimalConverter(val binaryStringLength: Int) {
     }
 
     @Throws(IllegalArgumentException::class)
+    fun fromSignedWithSignBit(value: String): Int {
+        require(value.length >= 2)
+        return fromUnsigned(value.drop(1)) * if (value[0] == '0') 1 else -1
+    }
+
+    @Throws(IllegalArgumentException::class)
     fun toSignedWithShift128(value: Int): String = toUnsigned(value + 128)
 
     @Throws(IllegalArgumentException::class)
+    fun fromSignedWithShift128(value: String) = fromUnsigned(value) - 128
+
+    @Throws(IllegalArgumentException::class)
     fun toSignedWithShift127(value: Int): String = toUnsigned(value + 127)
+
+    @Throws(IllegalArgumentException::class)
+    fun fromSignedWithShift127(value: String) = fromUnsigned(value) - 127
 
     @Throws(IllegalArgumentException::class)
     fun toSignedTwosComplement(value: Int): String =
         Integer.toBinaryString(value).padStart(binaryStringLength, '0').takeLast(binaryStringLength)
 
     @Throws(IllegalArgumentException::class)
+    fun fromSignedTwosComplement(value: String) = value.toIntOrNull(2) ?: throw IllegalArgumentException()
+
+    @Throws(IllegalArgumentException::class)
     fun toSignedOnesComplement(value: Int): String = toSignedTwosComplement(value + if (value < 0) -1 else 0)
+
+    @Throws(IllegalArgumentException::class)
+    fun fromSignedOnesComplement(value: String): Int {
+        val result = value.toIntOrNull(2) ?: throw IllegalArgumentException()
+        return if (result >= 0) result else result - 1
+    }
 
     @Throws(IllegalArgumentException::class)
     fun toSignedAlternating(value: Int): String {

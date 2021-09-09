@@ -45,14 +45,18 @@ class DecimalConverter(val binaryStringLength: Int) {
         Integer.toBinaryString(value).padStart(binaryStringLength, '0').takeLast(binaryStringLength)
 
     @Throws(IllegalArgumentException::class)
-    fun fromSignedTwosComplement(value: String) = value.toIntOrNull(2) ?: throw IllegalArgumentException()
+    fun fromSignedTwosComplement(value: String) = if (value.first() == '1') {
+        value.padStart(32, '1')
+    } else {
+        value
+    }.toLongOrNull(2)?.toInt() ?: throw IllegalArgumentException()
 
     @Throws(IllegalArgumentException::class)
     fun toSignedOnesComplement(value: Int): String = toSignedTwosComplement(value + if (value < 0) -1 else 0)
 
     @Throws(IllegalArgumentException::class)
     fun fromSignedOnesComplement(value: String): Int {
-        val result = value.toIntOrNull(2) ?: throw IllegalArgumentException()
+        val result = fromSignedTwosComplement(value)
         return if (result >= 0) result else result + 1
     }
 

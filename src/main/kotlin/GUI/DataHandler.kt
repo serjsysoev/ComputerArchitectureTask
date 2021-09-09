@@ -3,6 +3,7 @@ package GUI
 import DecimalConverter
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import java.lang.Exception
 
 enum class EncodingType {
     Decimal,
@@ -43,7 +44,12 @@ class DataHandler {
     val baseMinus2_State: MutableState<String> = mutableStateOf("")
     val symmetric_State: MutableState<String> = mutableStateOf("")
 
-    fun
+    private fun updateVariable(updater: () -> String) = try {
+            "0b${updater()}";
+        } catch (e: Exception) {
+            e.toString();
+        }
+
 
     fun updateDataBy(codec: EncodingType) {
         val decimalUpdateNumber = when(codec) {
@@ -59,15 +65,26 @@ class DataHandler {
             EncodingType.Symmetric -> TODO()
         } ?: return
         decimal_State.value = decimalUpdateNumber.toString()
-        noSign_State.value = "0b${decimalConverter.toUnsigned(decimalUpdateNumber)}"
-        noSign_State.value = "0b${decimalConverter.toUnsigned(decimalUpdateNumber)}"
-        bitForSign_State.value = "0b${decimalConverter.toSignedWithSignBit(decimalUpdateNumber)}"
-        skip128_State.value = "0b${decimalConverter.toSignedWithShift128(decimalUpdateNumber)}"
-        skip127_State.value = "0b${decimalConverter.toSignedWithShift127(decimalUpdateNumber)}"
-        supplementTo2_State.value = "0b${decimalConverter.toSignedTwosComplement(decimalUpdateNumber)}"
-        supplementTo1_State.value = "0b${decimalConverter.toSignedOnesComplement(decimalUpdateNumber)}"
-        alternation_State.value = "0b${decimalConverter.toSignedAlternating(decimalUpdateNumber)}"
-        baseMinus2_State.value = "0b${decimalConverter.toUnsigned(decimalUpdateNumber)}"
-        symmetric_State.value = "0b${decimalConverter.toUnsigned(decimalUpdateNumber)}"
+        noSign_State.value = updateVariable { decimalConverter.toUnsigned(decimalUpdateNumber) }
+        bitForSign_State.value = updateVariable { decimalConverter.toSignedWithSignBit(decimalUpdateNumber) }
+        skip128_State.value = updateVariable { decimalConverter.toSignedWithShift128(decimalUpdateNumber) }
+        skip127_State.value = updateVariable { decimalConverter.toSignedWithShift127(decimalUpdateNumber) }
+        supplementTo2_State.value = updateVariable { decimalConverter.toSignedTwosComplement(decimalUpdateNumber) }
+        supplementTo1_State.value = updateVariable { decimalConverter.toSignedOnesComplement(decimalUpdateNumber) }
+        alternation_State.value = updateVariable { decimalConverter.toSignedAlternating(decimalUpdateNumber) }
+        baseMinus2_State.value = updateVariable { decimalConverter.toUnsigned(decimalUpdateNumber) }
+        symmetric_State.value = updateVariable { decimalConverter.toUnsigned(decimalUpdateNumber) }
+    }
+    fun clearCells() {
+        decimal_State.value = "";
+        noSign_State.value = "";
+        bitForSign_State.value = "";
+        skip128_State.value = "";
+        skip127_State.value = "";
+        supplementTo2_State.value = "";
+        supplementTo1_State.value = "";
+        alternation_State.value = "";
+        baseMinus2_State.value = "";
+        symmetric_State.value = "";
     }
 }

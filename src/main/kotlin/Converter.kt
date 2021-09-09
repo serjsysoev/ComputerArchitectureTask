@@ -53,7 +53,7 @@ class DecimalConverter(val binaryStringLength: Int) {
     @Throws(IllegalArgumentException::class)
     fun fromSignedOnesComplement(value: String): Int {
         val result = value.toIntOrNull(2) ?: throw IllegalArgumentException()
-        return if (result >= 0) result else result - 1
+        return if (result >= 0) result else result + 1
     }
 
     @Throws(IllegalArgumentException::class)
@@ -63,6 +63,14 @@ class DecimalConverter(val binaryStringLength: Int) {
         require(result.length == binaryStringLength)
 
         return result
+    }
+
+    @Throws(IllegalArgumentException::class)
+    fun fromSignedAlternating(value: String): Int {
+        require(value.length >= 2)
+        val result = fromUnsigned(value.dropLast(1))
+        val signBit = value.last() == '1'
+        return if (signBit) -result - 1 else result
     }
 
     @Throws(IllegalArgumentException::class)
@@ -78,6 +86,10 @@ class DecimalConverter(val binaryStringLength: Int) {
         }
         throw IllegalArgumentException("Couldn't convert $value")
     }
+
+    @Throws(IllegalArgumentException::class)
+    fun fromSignedBaseNegativeTwo(value: String): Int =
+        value.reversed().mapIndexed { index, c -> (if (c == '1') 1 else 0) * (-2).pow(index) }.sum()
 
     @Throws(IllegalArgumentException::class)
     fun toSignedSymmetrical(value: Int, base: Int): String {
@@ -108,11 +120,20 @@ class DecimalConverter(val binaryStringLength: Int) {
             val number = numberList.reduceIndexed { index, acc, i -> acc + base.pow(index) * i }
             value == number
         }
-        
+
         require(result != null)
-        
+
         return result.reversed().map { if (it >= 0) it.toString() else 'z' + it + 1 }.joinToString(separator = "")
     }
+
+    @Throws(IllegalArgumentException::class)
+    fun fromSignedSymmetrical(value: String, base: Int) = value.reversed().mapIndexed { index, c ->
+        if (c.isDigit()) {
+            (c - '0') * base.pow(index)
+        } else {
+            (c.code - 'z'.code - 1) * base.pow(index)
+        }
+    }.sum()
 
     /**
      * @param n positive integer

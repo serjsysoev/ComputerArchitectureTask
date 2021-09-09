@@ -16,7 +16,8 @@ import androidx.compose.ui.unit.dp
 fun inputField(
     typedTextState: MutableState<String>,
     labelName: String,
-    onValueChanged: () -> Unit
+    onValueChanged: () -> Unit,
+    dataClearer: () -> Unit
 ) {
     Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(8.dp)) {
         OutlinedTextField(
@@ -24,7 +25,12 @@ fun inputField(
             modifier = Modifier.weight(weight = 1F),
             onValueChange = {
                 typedTextState.value = it
-                onValueChanged()
+                if (it == "") {
+                    dataClearer()
+                }
+                else {
+                    onValueChanged()
+                }
             },
             label = { Text(text = labelName) },
 

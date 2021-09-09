@@ -33,6 +33,8 @@ class DataHandler {
      */
     val decimalConverter = DecimalConverter(8)
 
+    val isBaseBinary = mutableStateOf(true)
+
     val decimal_State: MutableState<String> = mutableStateOf("")
     val noSign_State: MutableState<String> = mutableStateOf("")
     val bitForSign_State: MutableState<String> = mutableStateOf("")

@@ -285,17 +285,17 @@ class ConverterTest {
     @Test
     fun signedSymmetricalToDecimal() {
         val converter = DecimalConverter(8)
-        assertEquals(0, converter.fromSignedSymmetrical("0000"))
-        assertEquals(1, converter.fromSignedSymmetrical("0001"))
-        assertEquals(2, converter.fromSignedSymmetrical("001z"))
-        assertEquals(3, converter.fromSignedSymmetrical("0010"))
-        assertEquals(4, converter.fromSignedSymmetrical("0011"))
-        assertEquals(5, converter.fromSignedSymmetrical("01zz"))
+        assertEquals(0, converter.fromSignedSymmetrical("0000", 3))
+        assertEquals(1, converter.fromSignedSymmetrical("0001", 3))
+        assertEquals(2, converter.fromSignedSymmetrical("001z", 3))
+        assertEquals(3, converter.fromSignedSymmetrical("0010", 3))
+        assertEquals(4, converter.fromSignedSymmetrical("0011", 3))
+        assertEquals(5, converter.fromSignedSymmetrical("01zz", 3))
 
-        assertEquals(-1, converter.fromSignedSymmetrical("000z"))
-        assertEquals(-2, converter.fromSignedSymmetrical("00z1"))
-        assertEquals(-3, converter.fromSignedSymmetrical("00z0"))
-        assertEquals(-4, converter.fromSignedSymmetrical("00zz"))
-        assertEquals(-5, converter.fromSignedSymmetrical("0z11"))
+        assertEquals(-1, converter.fromSignedSymmetrical("000z", 3))
+        assertEquals(-2, converter.fromSignedSymmetrical("00z1", 3))
+        assertEquals(-3, converter.fromSignedSymmetrical("00z0", 3))
+        assertEquals(-4, converter.fromSignedSymmetrical("00zz", 3))
+        assertEquals(-5, converter.fromSignedSymmetrical("0z11", 3))
     }
 }

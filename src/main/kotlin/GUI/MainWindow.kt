@@ -1,20 +1,37 @@
 package GUI
 
 import androidx.compose.desktop.Window
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.BlendMode.Companion.Color
 import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.application
+import java.awt.SystemColor.text
 
 fun MainWindow() = application {
     Window(title = "String completer", size = IntSize(500, 900)) {
         val dataHandler = DataHandler()
-
+        val baseLabel = mutableStateOf("Binary")
 
         MaterialTheme {
             Column(modifier = Modifier.fillMaxSize()) {
+                Text(baseLabel.value,
+                    modifier = Modifier.padding(8.dp).clickable(
+                        onClick = {
+                            dataHandler.isBaseBinary.value = !dataHandler.isBaseBinary.value
+                            baseLabel.value = if (dataHandler.isBaseBinary.value) "binary" else "hex"
+                        },
+
+                    ))
                 inputField(dataHandler.decimal_State, "десятичное", {dataHandler.updateDataBy(EncodingType.Decimal)}, dataHandler::clearCells)
                 inputField(dataHandler.noSign_State, "без знака", {dataHandler.updateDataBy(EncodingType.NoSign)}, dataHandler::clearCells)
                 inputField(dataHandler.bitForSign_State, "знак под бит", {dataHandler.updateDataBy(EncodingType.BitForSign)}, dataHandler::clearCells)

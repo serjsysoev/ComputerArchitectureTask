@@ -47,36 +47,58 @@ class DataHandler {
     val symmetric_State: MutableState<String> = mutableStateOf("")
 
     private fun updateVariable(updater: () -> String) = try {
-            "0b${updater()}";
-        } catch (e: Exception) {
-            e.toString();
-        }
+        "0b${updater()}";
+    } catch (e: Exception) {
+        e.toString();
+    }
 
+    fun String.dropPrefix() = if (this.length >= 2 && !this[1].isDigit()) this.drop(2) else this
 
     fun updateDataBy(codec: EncodingType) {
-        val decimalUpdateNumber = when(codec) {
+        val decimalUpdateNumber = when (codec) {
             EncodingType.Decimal -> decimal_State.value.toIntOrNull()
-            EncodingType.NoSign -> decimalConverter.fromUnsigned(noSign_State.value)
-            EncodingType.BitForSign -> decimalConverter.fromSignedWithSignBit(bitForSign_State.value)
-            EncodingType.Skip128 -> decimalConverter.fromSignedWithShift128(skip128_State.value)
-            EncodingType.Skip127 -> decimalConverter.fromSignedWithShift127(skip127_State.value)
-            EncodingType.SupplementTo2 -> decimalConverter.fromSignedTwosComplement(supplementTo2_State.value)
-            EncodingType.SupplementTo1 -> decimalConverter.fromSignedOnesComplement(supplementTo1_State.value)
-            EncodingType.Alternation -> decimalConverter.fromSignedAlternating(alternation_State.value)
-            EncodingType.BaseMinus2 -> decimalConverter.fromSignedBaseNegativeTwo(baseMinus2_State.value)
-            EncodingType.Symmetric -> decimalConverter.fromSignedSymmetrical(symmetric_State.value, 3)
+            EncodingType.NoSign -> decimalConverter.fromUnsigned(noSign_State.value.dropPrefix())
+            EncodingType.BitForSign -> decimalConverter.fromSignedWithSignBit(bitForSign_State.value.dropPrefix())
+            EncodingType.Skip128 -> decimalConverter.fromSignedWithShift128(skip128_State.value.dropPrefix())
+            EncodingType.Skip127 -> decimalConverter.fromSignedWithShift127(skip127_State.value.dropPrefix())
+            EncodingType.SupplementTo2 -> decimalConverter.fromSignedTwosComplement(supplementTo2_State.value.dropPrefix())
+            EncodingType.SupplementTo1 -> decimalConverter.fromSignedOnesComplement(supplementTo1_State.value.dropPrefix())
+            EncodingType.Alternation -> decimalConverter.fromSignedAlternating(alternation_State.value.dropPrefix())
+            EncodingType.BaseMinus2 -> decimalConverter.fromSignedBaseNegativeTwo(baseMinus2_State.value.dropPrefix())
+            EncodingType.Symmetric -> decimalConverter.fromSignedSymmetrical(symmetric_State.value.dropPrefix(), 3)
         } ?: return
-        decimal_State.value = decimalUpdateNumber.toString()
-        noSign_State.value = updateVariable { decimalConverter.toUnsigned(decimalUpdateNumber) }
-        bitForSign_State.value = updateVariable { decimalConverter.toSignedWithSignBit(decimalUpdateNumber) }
-        skip128_State.value = updateVariable { decimalConverter.toSignedWithShift128(decimalUpdateNumber) }
-        skip127_State.value = updateVariable { decimalConverter.toSignedWithShift127(decimalUpdateNumber) }
-        supplementTo2_State.value = updateVariable { decimalConverter.toSignedTwosComplement(decimalUpdateNumber) }
-        supplementTo1_State.value = updateVariable { decimalConverter.toSignedOnesComplement(decimalUpdateNumber) }
-        alternation_State.value = updateVariable { decimalConverter.toSignedAlternating(decimalUpdateNumber) }
-        baseMinus2_State.value = updateVariable { decimalConverter.toSignedBaseNegativeTwo(decimalUpdateNumber) }
-        symmetric_State.value = updateVariable { decimalConverter.toSignedSymmetrical(decimalUpdateNumber, 3) }
+        if (codec != EncodingType.Decimal) {
+            decimal_State.value = decimalUpdateNumber.toString()
+        }
+        if (codec != EncodingType.NoSign) {
+            noSign_State.value = updateVariable { decimalConverter.toUnsigned(decimalUpdateNumber) }
+        }
+        if (codec != EncodingType.BitForSign) {
+            bitForSign_State.value = updateVariable { decimalConverter.toSignedWithSignBit(decimalUpdateNumber) }
+        }
+        if (codec != EncodingType.Skip128) {
+            skip128_State.value = updateVariable { decimalConverter.toSignedWithShift128(decimalUpdateNumber) }
+        }
+        if (codec != EncodingType.Skip127) {
+            skip127_State.value = updateVariable { decimalConverter.toSignedWithShift127(decimalUpdateNumber) }
+        }
+        if (codec != EncodingType.SupplementTo2) {
+            supplementTo2_State.value = updateVariable { decimalConverter.toSignedTwosComplement(decimalUpdateNumber) }
+        }
+        if (codec != EncodingType.SupplementTo1) {
+            supplementTo1_State.value = updateVariable { decimalConverter.toSignedOnesComplement(decimalUpdateNumber) }
+        }
+        if (codec != EncodingType.Alternation) {
+            alternation_State.value = updateVariable { decimalConverter.toSignedAlternating(decimalUpdateNumber) }
+        }
+        if (codec != EncodingType.BaseMinus2) {
+            baseMinus2_State.value = updateVariable { decimalConverter.toSignedBaseNegativeTwo(decimalUpdateNumber) }
+        }
+        if (codec != EncodingType.Symmetric) {
+            symmetric_State.value = updateVariable { decimalConverter.toSignedSymmetrical(decimalUpdateNumber, 3) }
+        }
     }
+
     fun clearCells() {
         decimal_State.value = "";
         noSign_State.value = "";

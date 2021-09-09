@@ -54,15 +54,15 @@ class DataHandler {
     fun updateDataBy(codec: EncodingType) {
         val decimalUpdateNumber = when(codec) {
             EncodingType.Decimal -> decimal_State.value.toIntOrNull()
-            EncodingType.NoSign -> TODO()
-            EncodingType.BitForSign -> TODO()
-            EncodingType.Skip128 -> TODO()
-            EncodingType.Skip127 -> TODO()
-            EncodingType.SupplementTo2 -> TODO()
-            EncodingType.SupplementTo1 -> TODO()
-            EncodingType.Alternation -> TODO()
-            EncodingType.BaseMinus2 -> TODO()
-            EncodingType.Symmetric -> TODO()
+            EncodingType.NoSign -> decimalConverter.fromUnsigned(noSign_State.value)
+            EncodingType.BitForSign -> decimalConverter.fromSignedWithSignBit(bitForSign_State.value)
+            EncodingType.Skip128 -> decimalConverter.fromSignedWithShift128(skip128_State.value)
+            EncodingType.Skip127 -> decimalConverter.fromSignedWithShift127(skip127_State.value)
+            EncodingType.SupplementTo2 -> decimalConverter.fromSignedTwosComplement(supplementTo2_State.value)
+            EncodingType.SupplementTo1 -> decimalConverter.fromSignedOnesComplement(supplementTo1_State.value)
+            EncodingType.Alternation -> decimalConverter.fromSignedAlternating(alternation_State.value)
+            EncodingType.BaseMinus2 -> decimalConverter.fromSignedBaseNegativeTwo(baseMinus2_State.value)
+            EncodingType.Symmetric -> decimalConverter.fromSignedSymmetrical(symmetric_State.value)
         } ?: return
         decimal_State.value = decimalUpdateNumber.toString()
         noSign_State.value = updateVariable { decimalConverter.toUnsigned(decimalUpdateNumber) }

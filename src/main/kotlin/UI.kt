@@ -1,3 +1,3 @@
-import GUI.MainWindow
+import GUI.mainWindow
 
-fun main() = MainWindow()
+fun main() = mainWindow()

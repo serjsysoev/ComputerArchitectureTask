@@ -15,6 +15,17 @@ class ConverterTest {
     }
 
     @Test
+    fun unsignedToDecimal() {
+        val converter = DecimalConverter(4)
+        assertEquals(0, converter.fromUnsigned("0000"))
+        assertEquals(1, converter.fromUnsigned("0001"))
+        assertEquals(2, converter.fromUnsigned("0010"))
+        assertEquals(3, converter.fromUnsigned("0011"))
+        assertEquals(4, converter.fromUnsigned("0100"))
+        assertEquals(5, converter.fromUnsigned("0101"))
+    }
+
+    @Test
     fun decimalToSignedWithSignBit() {
         val converter = DecimalConverter(4)
         assertEquals("0000", converter.toSignedWithSignBit(0))
@@ -31,6 +42,23 @@ class ConverterTest {
         assertEquals("1101", converter.toSignedWithSignBit(-5))
 
         assertThrows<IllegalArgumentException> { converter.toSignedWithSignBit(8) }
+    }
+
+    @Test
+    fun signedWithSignBitToDecimal() {
+        val converter = DecimalConverter(4)
+        assertEquals(0, converter.fromSignedWithSignBit("0000"))
+        assertEquals(1, converter.fromSignedWithSignBit("0001"))
+        assertEquals(2, converter.fromSignedWithSignBit("0010"))
+        assertEquals(3, converter.fromSignedWithSignBit("0011"))
+        assertEquals(4, converter.fromSignedWithSignBit("0100"))
+        assertEquals(5, converter.fromSignedWithSignBit("0101"))
+
+        assertEquals(-1, converter.fromSignedWithSignBit("1001"))
+        assertEquals(-2, converter.fromSignedWithSignBit("1010"))
+        assertEquals(-3, converter.fromSignedWithSignBit("1011"))
+        assertEquals(-4, converter.fromSignedWithSignBit("1100"))
+        assertEquals(-5, converter.fromSignedWithSignBit("1101"))
     }
 
     @Test

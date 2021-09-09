@@ -17,9 +17,11 @@ fun inputField(
     typedTextState: MutableState<String>,
     labelName: String,
     onValueChanged: () -> Unit,
-    dataClearer: () -> Unit
+    dataClearer: () -> Unit,
+    isBaseBinary: MutableState<Boolean>
 ) {
     Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(8.dp)) {
+        Text(if (isBaseBinary.value) "0b" else "0x")
         OutlinedTextField(
             value = typedTextState.value,
             modifier = Modifier.weight(weight = 1F),

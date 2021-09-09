@@ -62,7 +62,7 @@ class DataHandler {
             EncodingType.SupplementTo1 -> decimalConverter.fromSignedOnesComplement(supplementTo1_State.value)
             EncodingType.Alternation -> decimalConverter.fromSignedAlternating(alternation_State.value)
             EncodingType.BaseMinus2 -> decimalConverter.fromSignedBaseNegativeTwo(baseMinus2_State.value)
-            EncodingType.Symmetric -> decimalConverter.fromSignedSymmetrical(symmetric_State.value)
+            EncodingType.Symmetric -> decimalConverter.fromSignedSymmetrical(symmetric_State.value, 3)
         } ?: return
         decimal_State.value = decimalUpdateNumber.toString()
         noSign_State.value = updateVariable { decimalConverter.toUnsigned(decimalUpdateNumber) }
@@ -73,7 +73,7 @@ class DataHandler {
         supplementTo1_State.value = updateVariable { decimalConverter.toSignedOnesComplement(decimalUpdateNumber) }
         alternation_State.value = updateVariable { decimalConverter.toSignedAlternating(decimalUpdateNumber) }
         baseMinus2_State.value = updateVariable { decimalConverter.toSignedBaseNegativeTwo(decimalUpdateNumber) }
-        symmetric_State.value = updateVariable { decimalConverter.toSignedSymmetrical(decimalUpdateNumber) }
+        symmetric_State.value = updateVariable { decimalConverter.toSignedSymmetrical(decimalUpdateNumber, 3) }
     }
     fun clearCells() {
         decimal_State.value = "";

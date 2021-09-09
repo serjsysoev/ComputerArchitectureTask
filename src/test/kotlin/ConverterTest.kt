@@ -30,7 +30,7 @@ class ConverterTest {
         assertEquals("1100", converter.toSignedWithSignBit(-4))
         assertEquals("1101", converter.toSignedWithSignBit(-5))
 
-        assertThrows<IllegalStateException> { converter.toSignedWithSignBit(8) }
+        assertThrows<IllegalArgumentException> { converter.toSignedWithSignBit(8) }
     }
 
     @Test
@@ -69,52 +69,86 @@ class ConverterTest {
 
     @Test
     fun decimalToSignedTwosComplement() {
-        val converter = DecimalConverter(8)
-        assertEquals("00000000", converter.toSignedTwosComplement(0))
-        assertEquals("00000001", converter.toSignedTwosComplement(1))
-        assertEquals("00000010", converter.toSignedTwosComplement(2))
-        assertEquals("00000011", converter.toSignedTwosComplement(3))
-        assertEquals("00000100", converter.toSignedTwosComplement(4))
-        assertEquals("00000101", converter.toSignedTwosComplement(5))
+        val converter = DecimalConverter(4)
+        assertEquals("0000", converter.toSignedTwosComplement(0))
+        assertEquals("0001", converter.toSignedTwosComplement(1))
+        assertEquals("0010", converter.toSignedTwosComplement(2))
+        assertEquals("0011", converter.toSignedTwosComplement(3))
+        assertEquals("0100", converter.toSignedTwosComplement(4))
+        assertEquals("0101", converter.toSignedTwosComplement(5))
 
-        assertEquals("11111111", converter.toSignedTwosComplement(-1))
-        assertEquals("11111110", converter.toSignedTwosComplement(-2))
-        assertEquals("11111101", converter.toSignedTwosComplement(-3))
-        assertEquals("11111100", converter.toSignedTwosComplement(-4))
-        assertEquals("11111011", converter.toSignedTwosComplement(-5))
+        assertEquals("1111", converter.toSignedTwosComplement(-1))
+        assertEquals("1110", converter.toSignedTwosComplement(-2))
+        assertEquals("1101", converter.toSignedTwosComplement(-3))
+        assertEquals("1100", converter.toSignedTwosComplement(-4))
+        assertEquals("1011", converter.toSignedTwosComplement(-5))
     }
 
     @Test
     fun decimalToSignedOnesComplement() {
-        val converter = DecimalConverter(8)
-        assertEquals("00000000", converter.toSignedOnesComplement(0))
-        assertEquals("00000001", converter.toSignedOnesComplement(1))
-        assertEquals("00000010", converter.toSignedOnesComplement(2))
-        assertEquals("00000011", converter.toSignedOnesComplement(3))
-        assertEquals("00000100", converter.toSignedOnesComplement(4))
-        assertEquals("00000101", converter.toSignedOnesComplement(5))
+        val converter = DecimalConverter(4)
+        assertEquals("0000", converter.toSignedOnesComplement(0))
+        assertEquals("0001", converter.toSignedOnesComplement(1))
+        assertEquals("0010", converter.toSignedOnesComplement(2))
+        assertEquals("0011", converter.toSignedOnesComplement(3))
+        assertEquals("0100", converter.toSignedOnesComplement(4))
+        assertEquals("0101", converter.toSignedOnesComplement(5))
 
-        assertEquals("11111110", converter.toSignedOnesComplement(-1))
-        assertEquals("11111101", converter.toSignedOnesComplement(-2))
-        assertEquals("11111100", converter.toSignedOnesComplement(-3))
-        assertEquals("11111011", converter.toSignedOnesComplement(-4))
-        assertEquals("11111010", converter.toSignedOnesComplement(-5))
+        assertEquals("1110", converter.toSignedOnesComplement(-1))
+        assertEquals("1101", converter.toSignedOnesComplement(-2))
+        assertEquals("1100", converter.toSignedOnesComplement(-3))
+        assertEquals("1011", converter.toSignedOnesComplement(-4))
+        assertEquals("1010", converter.toSignedOnesComplement(-5))
     }
 
     @Test
     fun decimalToSignedAlternating() {
-        val converter = DecimalConverter(8)
-        assertEquals("00000000", converter.toSignedAlternating(0))
-        assertEquals("00000010", converter.toSignedAlternating(1))
-        assertEquals("00000100", converter.toSignedAlternating(2))
-        assertEquals("00000110", converter.toSignedAlternating(3))
-        assertEquals("00001000", converter.toSignedAlternating(4))
-        assertEquals("00001010", converter.toSignedAlternating(5))
+        val converter = DecimalConverter(4)
+        assertEquals("0000", converter.toSignedAlternating(0))
+        assertEquals("0010", converter.toSignedAlternating(1))
+        assertEquals("0100", converter.toSignedAlternating(2))
+        assertEquals("0110", converter.toSignedAlternating(3))
+        assertEquals("1000", converter.toSignedAlternating(4))
+        assertEquals("1010", converter.toSignedAlternating(5))
 
-        assertEquals("00000001", converter.toSignedAlternating(-1))
-        assertEquals("00000011", converter.toSignedAlternating(-2))
-        assertEquals("00000101", converter.toSignedAlternating(-3))
-        assertEquals("00000111", converter.toSignedAlternating(-4))
-        assertEquals("00001001", converter.toSignedAlternating(-5))
+        assertEquals("0001", converter.toSignedAlternating(-1))
+        assertEquals("0011", converter.toSignedAlternating(-2))
+        assertEquals("0101", converter.toSignedAlternating(-3))
+        assertEquals("0111", converter.toSignedAlternating(-4))
+        assertEquals("1001", converter.toSignedAlternating(-5))
+    }
+
+    @Test
+    fun decimalToSignedBaseNegativeTwo() {
+        val converter = DecimalConverter(4)
+        assertEquals("0000", converter.toSignedBaseNegativeTwo(0))
+        assertEquals("0001", converter.toSignedBaseNegativeTwo(1))
+        assertEquals("0110", converter.toSignedBaseNegativeTwo(2))
+        assertEquals("0111", converter.toSignedBaseNegativeTwo(3))
+        assertEquals("0100", converter.toSignedBaseNegativeTwo(4))
+        assertEquals("0101", converter.toSignedBaseNegativeTwo(5))
+
+        assertEquals("0011", converter.toSignedBaseNegativeTwo(-1))
+        assertEquals("0010", converter.toSignedBaseNegativeTwo(-2))
+        assertEquals("1101", converter.toSignedBaseNegativeTwo(-3))
+        assertEquals("1100", converter.toSignedBaseNegativeTwo(-4))
+        assertEquals("1111", converter.toSignedBaseNegativeTwo(-5))
+    }
+
+    @Test
+    fun decimalToSignedSymmetrical() {
+        val converter = DecimalConverter(4)
+        assertEquals("0000", converter.toSignedSymmetrical(0, 3))
+        assertEquals("0001", converter.toSignedSymmetrical(1, 3))
+        assertEquals("001z", converter.toSignedSymmetrical(2, 3))
+        assertEquals("0010", converter.toSignedSymmetrical(3, 3))
+        assertEquals("0011", converter.toSignedSymmetrical(4, 3))
+        assertEquals("01zz", converter.toSignedSymmetrical(5, 3))
+
+        assertEquals("000z", converter.toSignedSymmetrical(-1, 3))
+        assertEquals("00z1", converter.toSignedSymmetrical(-2, 3))
+        assertEquals("00z0", converter.toSignedSymmetrical(-3, 3))
+        assertEquals("00zz", converter.toSignedSymmetrical(-4, 3))
+        assertEquals("0z11", converter.toSignedSymmetrical(-5, 3))
     }
 }

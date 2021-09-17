@@ -41,3 +41,24 @@ fun inputField(
         Spacer(modifier = Modifier.width(8.dp))
     }
 }
+
+@Composable
+fun inputFieldSimple(
+    typedTextState: MutableState<String>,
+    labelName: String,
+    onValueChanged: () -> Unit
+) {
+    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(8.dp)) {
+        OutlinedTextField(
+            value = typedTextState.value,
+            modifier = Modifier.weight(weight = 1F),
+            onValueChange = {
+                typedTextState.value = it
+                onValueChanged()
+            },
+            label = { Text(text = labelName) },
+        )
+
+        Spacer(modifier = Modifier.width(8.dp))
+    }
+}
